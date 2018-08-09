@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'password_reset',
     'accounts',
     'blog',
     'django.contrib.admin',
@@ -125,3 +126,12 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+EMAIL_HOST = "smtp.qiye.163.com"
+EMAIL_HOST_USER = "silence@123.com"
+EMAIL_HOST_PASSWORD = "12345"
+EMAIL_PORT = 25
+EMAIL_USE_TLS = False
+DEFAULT_FROM_EMAIL = "silence"
+# 生产要去掉
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

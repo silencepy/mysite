@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    # path('', include('users.urls')),
+    path('pwd_reset/', include("password_reset.urls")),  # 修改源码里的urls.py增加一个app_name='pwd_reset'因为2.0不支持namespace
     path('accounts/', include('accounts.urls')),
     path('blog/', include('blog.urls')),
     path('', admin.site.urls),
