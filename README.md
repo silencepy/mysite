@@ -1,18 +1,26 @@
 # mysite
-test_django
-mysql作为Django web项目的数据库，昨天晚上进行了mysql升级，升级到了8.0。数据都没啥问题但是等用Django连接数据库的时候出现报错：
+Django 2.0.5
+mysql 8.0.11
+当启动django自带的服务器时，报错2059：
+> _mysql_exceptions.OperationalError: (2059, )
+> django.db.utils.OperationalError: (2059, )
+启动方式为如下：
+> python manage.py runserver 0.0.0.0:8000
+经过一番查询，调试，最终发现了问题所在。主要就是mysql8.0的问题。
+目前最新的mysql8.0对用户密码的加密方式为caching_sha2_password, django暂时还不支持这种新增的加密方式。只需要将用户加密方式改为老的加密方式即可。
+解决步骤：
+1.登录mysql，连接用户为root。
+> mysql -u root -p
+2.执行命令查看加密方式
+> use mysql;
+> select user,plugin from user where user='root';
+3.执行命令修改加密方式
+> alter user 'root'@'localhost' identified with mysql_native_password by 'yourpassword'
+4.属性权限使配置生效
+> flush privileges
 
-django.db.utils.OperationalError: (1045, "Access denied for user 'root'@'localhost' (using password: NO)")”
-1
-这就很神奇了，setting.py文件中的数据库配置没有变过，mysql数据库手动也能登录，库news_db也在。怎么就会报password：no了呢。百撕不得骑姐~ 
-赶紧上网查一下原因。看到mysql升级到8.0之后的新特性有一条是更新了密码的加密方式。如果要用原来的Django连接mysql8.0就得将mysql的加密方式转变为原来的方式。 
-解决方法如下： 
-登录到mysql，并执行如下两条命令
+重设mysql8.0的加密方式后，再次启动django服务器就没有任何问题了。
 
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'newpassword';  
-FLUSH PRIVILEGES;
-1
-2
-同时将setting.py中的password字段改成新设置的newpassword。
+
 
 password_reset 这个模块是单独装的，要修改源文件里的urls加上 app_name='pwd_reset'
