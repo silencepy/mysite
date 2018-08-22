@@ -19,6 +19,7 @@ from django.urls import include, path
 urlpatterns = [
     path('pwd_reset/', include("password_reset.urls")),  # 修改源码里的urls.py增加一个app_name='pwd_reset'因为2.0不支持namespace
     path('accounts/', include('accounts.urls')),
+    path("article/", include("article.urls")),
     path('blog/', include('blog.urls')),
     path('', admin.site.urls),
     path('admin/', admin.site.urls),
